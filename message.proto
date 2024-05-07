@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+message JoinMessage {
+    string player_id = 1;
+}
+
+message WelcomeMessage {
+    uint32 thing_id = 1;
+}
+
+message Message {
+    oneof msg {
+        JoinMessage join = 1;
+        WelcomeMessage welcome = 2;
+    }
+}
