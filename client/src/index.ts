@@ -1,3 +1,4 @@
+import * as proto from '../../proto/message';
 let ws:WebSocket|null = null;
 function connect() {
     if (ws != null) {
@@ -23,6 +24,13 @@ function onMessage(msg:MessageEvent<any>) {
 }
 function onConnected() {
     console.log("connected");
+    let msg = proto.Message.create({
+        join:{
+            playerId:crypto.randomUUID()
+        }
+    });
+    let encoded = proto.Message.encode(msg).finish();
+    ws?.send(encoded);
 }
 
 function onDisconnected() {
