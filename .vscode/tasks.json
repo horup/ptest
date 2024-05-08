@@ -11,6 +11,14 @@
         },
         {
             "type": "shell",
+            "command":"npm install",
+            "options": {
+                "cwd": "proto"
+            },
+            "label": "proto npm install"
+        },
+        {
+            "type": "shell",
             "command": "npm run start",
             "options": {
                 "cwd": "client"
@@ -18,7 +26,8 @@
             "problemMatcher": [
                 "$rustc"
             ],
-            "label": "run client"
+            "label": "run client",
+            "dependsOn":["proto npm install"]
         }
     ]
 }
