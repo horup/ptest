@@ -219,6 +219,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "proto"
+version = "0.1.0"
+dependencies = [
+ "prost",
+ "prost-build",
+]
+
+[[package]]
 name = "quote"
 version = "1.0.36"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -272,10 +280,6 @@ dependencies = [
 [[package]]
 name = "server"
 version = "0.1.0"
-dependencies = [
- "prost",
- "prost-build",
-]
 
 [[package]]
 name = "syn"

@@ -1,5 +1,7 @@
 syntax = "proto3";
 
+package messages;
+
 message JoinMessage {
     string player_id = 1;
 }
@@ -9,7 +11,7 @@ message WelcomeMessage {
 }
 
 message Message {
-    oneof msg {
+    oneof variant {
         JoinMessage join = 1;
         WelcomeMessage welcome = 2;
     }
