@@ -1,3 +1,7 @@
 [workspace]
 resolver = "2"
 members = [ "proto","server"]
+
+
+[workspace.dependencies]
+netcode = {git = "https://github.com/horup/netcode-rs.git"}

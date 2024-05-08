@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 prost = "0.12.4"
+netcode.workspace = true
 
 [build-dependencies]
 prost-build = "0.12.4"
