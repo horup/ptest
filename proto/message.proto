@@ -2,17 +2,21 @@ syntax = "proto3";
 
 package messages;
 
-message JoinMessage {
+message Join {
     string player_id = 1;
 }
 
-message WelcomeMessage {
-    uint32 thing_id = 1;
+message CreateInstance {
+}
+
+message JoinInstance {
+    string instance_id = 1;
 }
 
 message Message {
     oneof variant {
-        JoinMessage join = 1;
-        WelcomeMessage welcome = 2;
+        Join join = 1;
+        CreateInstance create_instance = 2;
+        JoinInstance join_instance = 3;
     }
 }
