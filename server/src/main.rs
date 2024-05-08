@@ -1,17 +1,25 @@
-/*pub mod proto {
-    include!(concat!(env!("OUT_DIR"), "/messages.rs"));
-}
-use prost::Message;
-use proto::*;
-*/
-fn main() {
-  /*  let msg = proto::Message {
-        variant:Some(message::Variant::Welcome(WelcomeMessage { thing_id: 10 }))
-    };
-    let mut bytes = prost::bytes::BytesMut::new();
-    msg.encode(&mut bytes).unwrap();
-    dbg!(bytes.len());
-    let bytes = prost::bytes::Bytes::from(bytes);
-    let msg2 = proto::Message::decode(bytes).unwrap();
-    println!("Hello, world!");*/
+use std::time::Duration;
+use netcode::server::{Event, Server};
+
+#[tokio::main]
+async fn main() {
+    let mut server: Server<proto::Message> = Server::default();
+    server.start(8080).await;
+
+    loop {
+        for e in server.poll() {
+            match e {
+                Event::ClientConnected { client_id } => {
+                    println!("{:?} connected", client_id);
+                }
+                Event::ClientDisconnected { client_id } => {
+                    println!("{:?} disconnected", client_id);
+                }
+                Event::Message { client_id, msg } => {
+                    println!("{:?}>{:?}", client_id, msg);
+                }
+            }
+        }
+        tokio::time::sleep(Duration::from_millis(100)).await;
+    }
 }

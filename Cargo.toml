@@ -5,3 +5,4 @@ members = [ "proto","server"]
 
 [workspace.dependencies]
 netcode = {git = "https://github.com/horup/netcode-rs.git"}
+tokio = {version = "*", features =["full"]}

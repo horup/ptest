@@ -21,4 +21,3 @@ impl netcode::SerializableMessage for proto::Message {
 }
 
 pub use proto::*;
-pub use prost;

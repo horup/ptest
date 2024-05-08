@@ -2,3 +2,8 @@
 name = "server"
 version = "0.1.0"
 edition = "2021"
+
+[dependencies]
+proto = {path="../proto"}
+netcode.workspace = true
+tokio.workspace = true
