@@ -8,3 +8,5 @@ proto = {path="../proto"}
 netcode.workspace = true
 tokio.workspace = true
 uuid = {version = "1.8.0", features = ["v4"]}
+log = "0.4.21"
+simple_logger = "5.0.0"

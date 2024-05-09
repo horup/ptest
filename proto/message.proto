@@ -3,7 +3,12 @@ syntax = "proto3";
 package messages;
 
 message Join {
-    string player_id = 1;
+    string id = 1;
+    string name = 2;
+}
+
+message Welcome {
+    string current_instance = 1;
 }
 
 message CreateInstance {
@@ -18,5 +23,6 @@ message Message {
         Join join = 1;
         CreateInstance create_instance = 2;
         JoinInstance join_instance = 3;
+        Welcome welcome = 4;
     }
 }

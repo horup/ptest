@@ -20,4 +20,13 @@ impl netcode::SerializableMessage for proto::Message {
     }
 }
 
+impl From<Variant> for proto::Message {
+    fn from(variant: Variant) -> Self {
+        Self {
+            variant:Some(variant)
+        }
+    }
+}
+
+use proto::message::Variant;
 pub use proto::*;

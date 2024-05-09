@@ -26,7 +26,8 @@ function onConnected() {
     console.log("connected");
     let msg = proto.Message.create({
         join:{
-            playerId:crypto.randomUUID()
+            id:crypto.randomUUID(),
+            name:"Test Player"
         }
     });
     let encoded = proto.Message.encode(msg).finish();
