@@ -9,7 +9,7 @@ function connect() {
     }
     ws = new WebSocket("ws://localhost:8080");
     ws.onopen = ()=>onConnected();
-    ws.onmessage = (msg)=>onMessage(msg);
+    ws.onmessage = async (msg)=>await onMessage(msg);
     ws.onclose = ()=>{
         setTimeout(() => {
             connect();
@@ -19,8 +19,13 @@ function connect() {
 }
 connect();
 
-function onMessage(msg:MessageEvent<any>) {
-    console.log(msg);
+async function onMessage(e:MessageEvent<any>) {
+    let blob = e.data as Blob;
+    let data = (await blob.stream().getReader().read()).value;
+    if (data) {
+        let msg = proto.Message.decode(data); 
+        console.log(msg);
+    }
 }
 function onConnected() {
     console.log("connected");
