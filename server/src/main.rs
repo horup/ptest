@@ -1,12 +1,13 @@
 use log::*;
 use netcode::server::{ClientId, Event, Server};
-use proto::{message::Variant, Join, Message, Welcome};
+use proto::{message::Variant, CreateInstance, Join, Message, Welcome};
 use std::{collections::HashMap, time::Duration};
 use uuid::Uuid;
 
 struct GameInstance {
     pub id: Uuid,
-    pub creator: String,
+    pub name: String,
+    pub creator: Uuid,
 }
 
 struct Player {
@@ -15,11 +16,23 @@ struct Player {
     pub name: String,
     pub instance_id: Option<Uuid>,
 }
+trait Players {
+    fn find_player(&self, client_id: ClientId) -> Option<&Player>;
+}
+impl Players for HashMap<Uuid, Player> {
+    fn find_player(&self, client_id: ClientId) -> Option<&Player> {
+        self.iter().find(|x|x.1.client_id == Some(client_id)).map(|x|x.1)
+    }
+}
 
 struct Context {
     pub server: Server<proto::Message>,
     pub instances: HashMap<Uuid, GameInstance>,
     pub players: HashMap<Uuid, Player>,
+}
+
+fn on_create_instance(c:&mut Context, ci:CreateInstance, client_id: ClientId) {
+    let player = c.players.find_player(client_id);
 }
 
 fn on_join(c: &mut Context, j: Join, client_id: ClientId) {
@@ -77,6 +90,9 @@ fn tick(c: &mut Context) {
                 match msg {
                     proto::message::Variant::Join(j) => {
                         on_join(c, j, client_id);
+                    }
+                    Variant::CreateInstance(ci) => {
+                        on_create_instance(c, ci, client_id);
                     }
                     _ => {}
                 }
