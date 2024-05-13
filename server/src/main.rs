@@ -8,6 +8,18 @@ struct GameInstance {
     pub id: Uuid,
     pub name: String,
     pub creator: Uuid,
+    pub recv:Vec<(Uuid, Variant)>,
+    pub sent:Vec<(Uuid, Variant)>
+}
+impl GameInstance {
+    pub fn push_msg(&mut self, player_id:Uuid, msg:Variant) {
+        self.recv.push((player_id, msg));
+    }
+    pub fn pop_msgs(&mut self) -> Vec<(Uuid, Variant)> {
+        let popped = self.sent.clone();
+        self.sent.clear();
+        return popped;
+    }
 }
 
 struct Player {
@@ -48,6 +60,8 @@ fn on_create_instance(c:&mut Context, ci:CreateInstance, client_id: ClientId) {
                 id: inst_id,
                 name: ci.name.clone(),
                 creator: player.id.clone(),
+                recv: Default::default(),
+                sent: Default::default(),
             };
             c.instances.insert(inst_id, inst);
             player.instance_id = Some(inst_id);
