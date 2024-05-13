@@ -1,6 +1,6 @@
 use log::*;
 use netcode::server::{ClientId, Event, Server};
-use proto::{message::Variant, CreateInstance, Join, Message, Welcome};
+use proto::{message::Variant, CreateInstance, Join, Welcome};
 use std::{collections::HashMap, time::Duration};
 use uuid::Uuid;
 
@@ -18,10 +18,15 @@ struct Player {
 }
 trait Players {
     fn find_player(&self, client_id: ClientId) -> Option<&Player>;
+    fn find_player_mut(&mut self, client_id: ClientId) -> Option<&mut Player>;
 }
 impl Players for HashMap<Uuid, Player> {
     fn find_player(&self, client_id: ClientId) -> Option<&Player> {
         self.iter().find(|x|x.1.client_id == Some(client_id)).map(|x|x.1)
+    }
+    
+    fn find_player_mut(&mut self, client_id: ClientId) -> Option<&mut Player> {
+        self.iter_mut().find(|x|x.1.client_id == Some(client_id)).map(|x|x.1)
     }
 }
 
@@ -32,7 +37,25 @@ struct Context {
 }
 
 fn on_create_instance(c:&mut Context, ci:CreateInstance, client_id: ClientId) {
-    let player = c.players.find_player(client_id);
+    let Some(player) = c.players.find_player_mut(client_id) else { return };
+    match player.instance_id {
+        Some(id) => {
+            // TODO handle case where player has an instance
+        },
+        None => {
+            let inst_id = Uuid::new_v4();
+            let inst = GameInstance {
+                id: inst_id,
+                name: ci.name.clone(),
+                creator: player.id.clone(),
+            };
+            c.instances.insert(inst_id, inst);
+            player.instance_id = Some(inst_id);
+
+            c.server.send(client_id, Variant::Welcome(Welcome { current_instance: inst_id.to_string() }).into());
+        },
+    }
+
 }
 
 fn on_join(c: &mut Context, j: Join, client_id: ClientId) {

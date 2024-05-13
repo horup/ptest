@@ -12,6 +12,7 @@ message Welcome {
 }
 
 message CreateInstance {
+    string name = 1;
 }
 
 message JoinInstance {
