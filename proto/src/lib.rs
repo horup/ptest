@@ -28,5 +28,5 @@ impl From<Variant> for proto::Message {
     }
 }
 
-use proto::message::Variant;
+pub use proto::message::Variant;
 pub use proto::*;

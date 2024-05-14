@@ -11,6 +11,15 @@ message Welcome {
     string current_instance = 1;
 }
 
+message Instance {
+    string id = 1;
+    string name = 2;
+}
+
+message Instances {
+    repeated Instance instances = 1; 
+}
+
 message CreateInstance {
     string name = 1;
 }
@@ -19,11 +28,16 @@ message JoinInstance {
     string instance_id = 1;
 }
 
+message RefreshLobby {
+}
+
 message Message {
     oneof variant {
         Join join = 1;
         CreateInstance create_instance = 2;
         JoinInstance join_instance = 3;
         Welcome welcome = 4;
+        Instances instances = 5;
+        RefreshLobby refresh_lobby = 6;
     }
 }

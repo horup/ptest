@@ -1,6 +1,6 @@
 use log::*;
 use netcode::server::{ClientId, Event, Server};
-use proto::{message::Variant, CreateInstance, Join, Welcome};
+use proto::{message::Variant, CreateInstance, Join, Message, Welcome};
 use std::{collections::HashMap, time::Duration};
 use uuid::Uuid;
 
@@ -65,11 +65,23 @@ fn on_create_instance(c:&mut Context, ci:CreateInstance, client_id: ClientId) {
             };
             c.instances.insert(inst_id, inst);
             player.instance_id = Some(inst_id);
-
             c.server.send(client_id, Variant::Welcome(Welcome { current_instance: inst_id.to_string() }).into());
         },
     }
 
+}
+
+fn on_refresh_lobby(c:&mut Context, client_id: ClientId) {
+    let mut instances:proto::Instances = Default::default();
+    c.instances.values().for_each(|i|{
+        instances.instances.push(proto::Instance {
+            id: i.id.to_string(),
+            name: i.name.clone(),
+        });
+    });
+    let variant:proto::Variant = Variant::Instances(instances);
+    let msg = proto::Message::from(variant);
+    c.server.send(client_id, msg);
 }
 
 fn on_join(c: &mut Context, j: Join, client_id: ClientId) {
@@ -130,6 +142,9 @@ fn tick(c: &mut Context) {
                     }
                     Variant::CreateInstance(ci) => {
                         on_create_instance(c, ci, client_id);
+                    }
+                    Variant::RefreshLobby(_) => {
+                        on_refresh_lobby(c, client_id);
                     }
                     _ => {}
                 }

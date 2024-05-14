@@ -35,6 +35,10 @@ function onConnected() {
             name:"Test Player"
         }
     });
+    sendMsg(msg);
+}
+
+function sendMsg(msg:proto.Message) {
     let encoded = proto.Message.encode(msg).finish();
     ws?.send(encoded);
 }
@@ -52,3 +56,19 @@ async function init() {
 }
 
 init();
+
+(window as any).cmd = {
+    "createInstance":()=>{
+        let msg = proto.Message.create({
+            createInstance:{
+                name:"Test Name"
+            }
+        });
+        sendMsg(msg);
+    },
+    "refreshLobby":()=>{
+        sendMsg({
+            refreshLobby:{}
+        });
+    }
+}
